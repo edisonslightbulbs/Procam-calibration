@@ -3,6 +3,8 @@
 
 #include <opencv2/core.hpp>
 
+#include "kinect.h"
+
 namespace calibration {
 
 const float calibrationSquareDimension = 0.02500f; // in meters
@@ -32,5 +34,7 @@ int findArucoMarkers(
 
 void startChessBoardCalibration(
     cv::Mat& cameraMatrix, cv::Mat distanceCoefficients);
+
+void kinect2CV(std::shared_ptr<Kinect>& sptr_kinect);
 }
 #endif /* CALIBRATION_H */
