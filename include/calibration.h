@@ -3,35 +3,34 @@
 
 #include <opencv2/core.hpp>
 
-namespace calibration{
+namespace calibration {
 
 const float calibrationSquareDimension = 0.02500f; // in meters
 const float arucoSquareDimension = 0.0565f;        // in meters
 
-
-void createKnownBoarderPosition(const cv::Size& boardSize,
-                                float squareEdgeLength, std::vector<cv::Point3f>& corners);
+void createChessboardBoarder(const cv::Size& boardSize, float squareEdgeLength,
+    std::vector<cv::Point3f>& corners);
 
 void findChessboardCorners(std::vector<cv::Mat>& images,
-                           std::vector<std::vector<cv::Point2f>>& allFoundCorners,
-                           bool showResults = false);
+    std::vector<std::vector<cv::Point2f>>& allFoundCorners,
+    bool showResults = false);
 
 void calibrate(std::vector<cv::Mat> calibrationImages,
-               const cv::Size& boardSize, float squareEdgeLength, cv::Mat& cameraMatrix,
-               cv::Mat& distanceCoefficients);
+    const cv::Size& boardSize, float squareEdgeLength, cv::Mat& cameraMatrix,
+    cv::Mat& distanceCoefficients);
 
-bool exportCalibration(
-        const std::string& name, cv::Mat cameraMatrix, cv::Mat distanceCoefficients);
+bool exportCalibration(const std::string& name, cv::Mat cameraMatrix,
+    cv::Mat distanceCoefficients);
 
 bool importCalibration(const std::string& name, cv::Mat& cameraMatrix,
-                       cv::Mat& distanceCoefficients);
+    cv::Mat& distanceCoefficients);
 
 void createArucoMarkers();
 
-int findArucoMarkers(const cv::Mat& cameraMatrix,
-                     const cv::Mat& distanceCoefficients, float arucoSquareDimensions);
+int findArucoMarkers(
+    const cv::Mat& cameraMatrix, const cv::Mat& distanceCoefficients);
 
 void startChessBoardCalibration(
-        cv::Mat& cameraMatrix, cv::Mat distanceCoefficients);
+    cv::Mat& cameraMatrix, cv::Mat distanceCoefficients);
 }
 #endif /* CALIBRATION_H */
