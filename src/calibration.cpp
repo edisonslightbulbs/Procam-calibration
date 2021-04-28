@@ -11,9 +11,7 @@
 #include <thread>
 
 #include "calibration.h"
-
-const float calibrationSquareDimension = 0.02500f; // meters
-const float arucoSquareDimension = 0.0565f;        // meters
+#include "kinect.h"
 
 void calibration::createArucoMarkers()
 {
@@ -31,7 +29,7 @@ void calibration::createArucoMarkers()
     }
 }
 
-void calibration::createKnownBoarderPosition(const cv::Size& boardSize,
+void calibration::createChessboardBoarder(const cv::Size& boardSize,
     float squareEdgeLength, std::vector<cv::Point3f>& corners)
 {
     for (int i = 0; i < boardSize.height; i++) {
@@ -43,8 +41,7 @@ void calibration::createKnownBoarderPosition(const cv::Size& boardSize,
 }
 
 void calibration::findChessboardCorners(std::vector<cv::Mat>& images,
-    std::vector<std::vector<cv::Point2f>>& allFoundCorners,
-    bool showResults = false)
+    std::vector<std::vector<cv::Point2f>>& allFoundCorners, bool showResults)
 {
     for (auto& image : images) {
         std::vector<cv::Point2f> pointBuf;
@@ -73,8 +70,9 @@ void calibration::calibrate(std::vector<cv::Mat> calibrationImages,
 
     std::vector<std::vector<cv::Point3f>> worldSpaceCornersPoints(1);
 
-    createKnownBoarderPosition(
+    createChessboardBoarder(
         boardSize, squareEdgeLength, worldSpaceCornersPoints[0]);
+
     worldSpaceCornersPoints.resize(
         checkerboardImageSpacePoints.size(), worldSpaceCornersPoints[0]);
 
@@ -122,9 +120,10 @@ bool calibration::exportCalibration(
     return false;
 }
 
-bool calibration::importCalibration(const std::string& name, cv::Mat& cameraMatrix,
-    cv::Mat& distanceCoefficients)
+bool calibration::importCalibration(const std::string& name,
+    cv::Mat& cameraMatrix, cv::Mat& distanceCoefficients)
 {
+    std::cout << "-- loading calibration parameters" << std::endl;
     std::ifstream inStream(name);
     if (inStream) {
 
@@ -161,12 +160,10 @@ bool calibration::importCalibration(const std::string& name, cv::Mat& cameraMatr
     return false;
 }
 
-int calibration::findArucoMarkers(const cv::Mat& cameraMatrix,
-    const cv::Mat& distanceCoefficients, float arucoSquareDimensions)
+int calibration::findArucoMarkers(
+    const cv::Mat& cameraMatrix, const cv::Mat& distanceCoefficients)
 {
     cv::Mat frame;
-    cv::aruco::DetectorParameters parameters;
-
     std::vector<int> markerIds;
     std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCorners;
 
@@ -185,7 +182,14 @@ int calibration::findArucoMarkers(const cv::Mat& cameraMatrix,
     int rgbWidth = k4a_image_get_width_pixels(sptr_kinect->m_rgbImage);
     int rgbHeight = k4a_image_get_height_pixels(sptr_kinect->m_rgbImage);
 
+    bool init = true;
     while (true) {
+        if (init) {
+            std::cout
+                << "-- place aruco marker/s in field of view of the camera"
+                << std::endl;
+            init = false;
+        }
         /** get next frame from kinect */
         sptr_kinect->getFrame(RGB_TO_DEPTH);
 
@@ -242,7 +246,17 @@ void calibration::startChessBoardCalibration(
     /** create named window */
     cv::namedWindow("kinect", cv::WINDOW_AUTOSIZE);
 
-    while (true) {
+    bool done = false;
+    bool init = true;
+    while (!done) {
+        /** helper prompt */
+        if (init) {
+            init = false;
+            std::cout << "-- press ENTER key to take image of chessboard"
+                      << std::endl;
+            std::cout << "-- press ESC key to exit calibration" << std::endl;
+        }
+
         /** get next frame from kinect */
         sptr_kinect->getFrame(RGB_TO_DEPTH);
 
@@ -295,23 +309,11 @@ void calibration::startChessBoardCalibration(
                     distanceCoefficients);
                 exportCalibration(
                     "calibration.txt", cameraMatrix, distanceCoefficients);
-                std::exit(0);
+                done = true;
             }
         default:
             break;
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
-}
-
-int main(int argc, char* argv[])
-{
-    cv::Mat distanceCoefficients;
-    cv::Mat cameraMatrix = cv::Mat::eye(3, 3, CV_64F);
-
-    startChessBoardCalibration(cameraMatrix, distanceCoefficients);
-    std::this_thread::sleep_for(std::chrono::seconds(5));
-    importCalibration("calibration.txt", cameraMatrix, distanceCoefficients);
-    findArucoMarkers(cameraMatrix, distanceCoefficients, arucoSquareDimension);
-
-    return 0;
 }
