@@ -14,3 +14,4 @@ src/main.cpp
 *.ply
 *.log
 CMakeLists.txt
+calibration.txt
