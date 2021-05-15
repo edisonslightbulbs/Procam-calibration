@@ -179,8 +179,8 @@ int calibration::findArucoMarkers(
 
     /** initialize kinect */
     std::shared_ptr<Kinect> sptr_kinect(new Kinect);
-    int rgbWidth = k4a_image_get_width_pixels(sptr_kinect->m_rgbImage);
-    int rgbHeight = k4a_image_get_height_pixels(sptr_kinect->m_rgbImage);
+    int rgbWidth = k4a_image_get_width_pixels(sptr_kinect->m_rgbImg);
+    int rgbHeight = k4a_image_get_height_pixels(sptr_kinect->m_rgbImg);
 
     bool init = true;
     while (true) {
@@ -194,8 +194,7 @@ int calibration::findArucoMarkers(
         sptr_kinect->getFrame(RGB_TO_DEPTH);
 
         /** get image from kinect */
-        uint8_t* color_image_data
-            = k4a_image_get_buffer(sptr_kinect->m_rgbImage);
+        uint8_t* color_image_data = k4a_image_get_buffer(sptr_kinect->m_rgbImg);
 
         /** release resources */
         sptr_kinect->release();
@@ -237,8 +236,8 @@ void calibration::startChessBoardCalibration(
 
     /** initialize kinect */
     std::shared_ptr<Kinect> sptr_kinect(new Kinect);
-    int rgbWidth = k4a_image_get_width_pixels(sptr_kinect->m_rgbImage);
-    int rgbHeight = k4a_image_get_height_pixels(sptr_kinect->m_rgbImage);
+    int rgbWidth = k4a_image_get_width_pixels(sptr_kinect->m_rgbImg);
+    int rgbHeight = k4a_image_get_height_pixels(sptr_kinect->m_rgbImg);
 
     /** defined frames per second */
     const int fps = 20;
@@ -261,8 +260,7 @@ void calibration::startChessBoardCalibration(
         sptr_kinect->getFrame(RGB_TO_DEPTH);
 
         /** get image from kinect */
-        uint8_t* color_image_data
-            = k4a_image_get_buffer(sptr_kinect->m_rgbImage);
+        uint8_t* color_image_data = k4a_image_get_buffer(sptr_kinect->m_rgbImg);
 
         /** release resources */
         sptr_kinect->release();
