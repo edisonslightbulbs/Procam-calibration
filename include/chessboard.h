@@ -4,14 +4,17 @@
 #include <opencv2/opencv.hpp>
 
 namespace chessboard {
-    // measurement of square side in meters
-    const float CHESSBOARD_SQUARE_DIMENSION = 0.02500f;
+const float PHYSICAL_BOARD_BLOCK_LENGTH = 0.02500f;
+const float PROJECTED_BOARD_BLOCK_LENGTH = 0.02500f;
 
-void findSquareCorners(std::vector<cv::Mat>& images,
+void findImageSpaceCorners(std::vector<cv::Mat>& images,
     std::vector<std::vector<cv::Point2f>>& allFoundCorners,
     bool showResults = false);
 
-void findSquareEdges(const cv::Size& boardSize, float squareEdgeLength,
+void findWorldSpaceCorners(const cv::Size& boardSize, float squareEdgeLength,
     std::vector<cv::Point3f>& corners);
+
+cv::Mat generate(const cv::Size& imgSize, const cv::Size& boardSize,
+    std::vector<cv::Point2f>& corners);
 }
-#endif //CHESSBOARD_H
+#endif // CHESSBOARD_H
