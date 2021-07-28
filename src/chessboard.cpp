@@ -34,41 +34,40 @@ void chessboard::findWorldSpaceCorners(const cv::Size& boardSize,
 cv::Mat chessboard::generate(const cv::Size& imgSize, const cv::Size& boardSize,
     std::vector<cv::Point2f>& corners)
 {
-    // todo bug: chessboard dimensions are onto honoured
-    int offset
-        = 50; // opencv requires white boarders around checkerboard pattern
-
-    // checkerboard image
+    // opencv requires white boarders around chessboard
     cv::Mat imgCheckerboard(imgSize, CV_8UC3, cv::Scalar::all(255));
 
-    // block size
-    int squareWidth = floor((imgSize.width - 2 * offset) / boardSize.width);
-    int squareHeight = floor((imgSize.height - 2 * offset) / boardSize.height);
+    // create chessboard using blocks
+    const int OFFSET = 10;
+    const int BLOCK_SIDE_LENGTH
+        = (imgSize.width - (2 * OFFSET)) / boardSize.width + 1;
+    const int LEEWAY = BLOCK_SIDE_LENGTH + OFFSET;
 
-    // block color
+    int height = (BLOCK_SIDE_LENGTH * boardSize.height + 1) + (2 * OFFSET);
+    int width = (BLOCK_SIDE_LENGTH * boardSize.width + 1) + (2 * OFFSET);
+
+    std::cout << "--      image: pixel rows = " << imgSize.height << std::endl;
+    std::cout << "--      image: pixel cols = " << imgSize.width << std::endl;
+    std::cout << "-- chessboard: pixel rows = " << height << std::endl;
+    std::cout << "-- chessboard: pixel cols = " << width << std::endl;
+    std::cout << "--      block: pixel size = " << BLOCK_SIDE_LENGTH
+              << std::endl;
+
+    int count = 0;
     unsigned char color = 1;
-
-    //! The order must be consistent with OpenCV order:
-    // row first then column, each row sweep from left to right
-    for (int y = offset; y < imgSize.height - offset; y = y + squareHeight) {
-        color = ~color; // bitwise complement
-        if (y + squareHeight > imgSize.height - offset) {
-            break;
-        }
-        for (int x = offset; x < imgSize.width - offset; x = x + squareWidth) {
-            color = ~color;
-            if (x + squareWidth > imgSize.width - offset) {
-                break;
-            }
-            // save checkerboard points
-            if (x > offset && y > offset) {
-                corners.emplace_back(x, y);
-            }
-            // color the block
-            cv::Mat block
-                = imgCheckerboard(cv::Rect(x, y, squareWidth, squareHeight));
-            block.setTo(cv::Scalar::all(color));
-        }
+    for (int y = OFFSET; y <= (height - LEEWAY); y += BLOCK_SIDE_LENGTH) {
+        count++;
+        std::cout << count << std::endl;
+        // color = ~color;
+        // for (int x = OFFSET; x <= width - OFFSET; x = x + BLOCK_SIDE_LENGTH)
+        // {
+        //      color = ~color;
+        //     corners.emplace_back(x, y);
+        //     cv::Mat blocks
+        //             = imgCheckerboard(cv::Rect(x, y, BLOCK_SIDE_LENGTH,
+        //             BLOCK_SIDE_LENGTH));
+        //     blocks.setTo(cv::Scalar::all(color));
+        // }
     }
     return imgCheckerboard;
 }
