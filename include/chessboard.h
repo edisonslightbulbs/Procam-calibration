@@ -4,8 +4,9 @@
 #include <opencv2/opencv.hpp>
 
 namespace chessboard {
-const float PHYSICAL_BOARD_BLOCK_LENGTH = 0.02500f;
-const float PROJECTED_BOARD_BLOCK_LENGTH = 0.05400f;
+
+const float PHYSICAL_BOARD_BLOCK_SIDE_LENGTH = 0.02500f;
+const float PROJECTED_BOARD_BLOCK_SIDE_LENGTH = 0.05400f;
 
 void findImageSpaceCorners(std::vector<cv::Mat>& images,
     std::vector<std::vector<cv::Point2f>>& allFoundCorners,
