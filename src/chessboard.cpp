@@ -3,6 +3,8 @@
 cv::Mat chessboard::create(const cv::Size& imgSize, const cv::Size& boardSize,
     std::vector<cv::Point2f>& imgSpaceCorners)
 {
+    // todo: assert aspect ration of image size
+
     int offset = 50;
     unsigned char color = 255;
     cv::Mat board(imgSize, CV_8UC3, cv::Scalar::all(255));
