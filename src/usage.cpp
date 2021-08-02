@@ -1,10 +1,10 @@
-#include <iostream>
 #include "usage.h"
+#include <iostream>
 
 void usage::prompt(const int& code)
 {
     switch (code) {
-    case (CHESSBOARD_IMAGES):
+    case (USAGE):
         std::cout << "INSTRUCTIONS:" << std::endl;
         std::cout << "-- press ENTER to take images" << std::endl;
         std::cout << "-- to at least 20 chessboard images" << std::endl;
