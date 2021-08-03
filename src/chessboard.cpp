@@ -37,8 +37,8 @@ cv::Mat chessboard::create(const cv::Size& imgSize, const cv::Size& boardSize,
     return board;
 }
 
-void chessboard::findImageSpaceCorners(std::vector<cv::Mat>& images,
-    std::vector<std::vector<cv::Point2f>>& imageSpaceCorners, bool show)
+void chessboard::findCameraSpaceCorners(std::vector<cv::Mat>& images,
+    std::vector<std::vector<cv::Point2f>>& corners, bool show)
 {
     for (auto& image : images) {
         std::vector<cv::Point2f> corner;
@@ -46,7 +46,7 @@ void chessboard::findImageSpaceCorners(std::vector<cv::Mat>& images,
             cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_NORMALIZE_IMAGE);
 
         if (found) {
-            imageSpaceCorners.emplace_back(corner);
+            corners.emplace_back(corner);
         }
 
         if (show) {
