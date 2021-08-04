@@ -3,10 +3,10 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "kinect.h"
-#include "file.h"
-#include "usage.h"
 #include "chessboard.h"
+#include "file.h"
+#include "kinect.h"
+#include "usage.h"
 
 class Camera {
 private:
@@ -14,15 +14,14 @@ private:
     void findWorldSpaceCorners(const cv::Size& boardSize, float blockWidth);
 
 public:
-    cv::Mat m_K;
-    cv::Mat m_matrix;
     std::vector<cv::Mat> m_R;
     std::vector<cv::Mat> m_t;
-    std::vector<cv::Mat> m_images;
+    cv::Mat m_K; // <- camera matrix
+    cv::Mat m_distortionCoefficients;
 
+    std::vector<cv::Mat> m_images;
     std::vector<std::vector<cv::Point3f>> m_worldSpaceCorners;
     std::vector<std::vector<cv::Point2f>> m_cameraSpaceCorners;
-
 
     /**
      * Evaluates the R (rotation) , t (translation), camera matrix,
