@@ -9,14 +9,17 @@ void usage::prompt(const int& code)
         std::cout << "-- press ENTER to take images" << std::endl;
         std::cout << "-- to at least 20 chessboard images" << std::endl;
         std::cout << "-- press ESCAPE to exit capture mode" << std::endl;
+        std::cout << "-- once calibration is done, see output directory for "
+                     "calibration file"
+                  << std::endl;
         break;
-    case (COMPUTING_CALIBRATION_PARAMETERS):
+    case (CALIBRATING):
         std::cout << "-- computing calibration parameters" << std::endl;
         break;
-    case (MORE_CHESSBOARD_IMAGES_REQUIRED):
+    case (MORE_IMAGES_REQUIRED):
         std::cout << "-- take more chessboard images" << std::endl;
         break;
-    case (WRITING_CALIBRATION_PARAMETERS):
+    case (SAVING_PARAMETERS):
         std::cout << "-- saving calibration parameters to disk" << std::endl;
         break;
 
