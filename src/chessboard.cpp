@@ -38,26 +38,6 @@ cv::Mat chessboard::create(const cv::Size& imgSize, const cv::Size& boardSize,
     return board;
 }
 
-void chessboard::findImageSpaceCorners(std::vector<cv::Mat>& images,
-                                       std::vector<std::vector<cv::Point2f>>& corners, bool show)
-{
-    for (auto& image : images) {
-        std::vector<cv::Point2f> corner;
-        bool found = cv::findChessboardCorners(image, cv::Size(9, 6), corner,
-            cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_NORMALIZE_IMAGE);
-
-        if (found) {
-            corners.emplace_back(corner);
-        }
-
-        if (show) {
-            cv::drawChessboardCorners(image, cv::Size(9, 6), corner, found);
-            cv::imshow("CALIBRATION CORNERS", image);
-            cv::waitKey(0);
-        }
-    }
-}
-
 void chessboard::findWorldSpaceCorners(const cv::Size& boardSize,
     float blockWidth, std::vector<cv::Point3f>& worldSpaceCorners)
 {
