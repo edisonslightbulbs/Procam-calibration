@@ -4,8 +4,13 @@
 
 #include "file.h"
 
-bool parameters::write(
-    const std::string& name, cv::Mat cameraMatrix, cv::Mat distanceCoefficients)
+/*
+ * n.b. The focal length and optical centers can be used to
+ *      create a camera matrix (K). This code base uses K
+ *      synonymously with camera matrix.
+ */
+bool parameters::write(const std::string& name, cv::Mat cameraMatrix,
+    cv::Mat distortionCoefficients)
 {
     std::ofstream outStream(name);
     if (outStream) {
@@ -20,18 +25,18 @@ bool parameters::write(
             }
         }
 
-        rows = distanceCoefficients.rows;
-        columns = distanceCoefficients.cols;
+        rows = distortionCoefficients.rows;
+        columns = distortionCoefficients.cols;
         outStream << rows << std::endl;
         outStream << columns << std::endl;
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < columns; c++) {
-                double value = distanceCoefficients.at<double>(r, c);
+                double value = distortionCoefficients.at<double>(r, c);
                 outStream << value << std::endl;
             }
         }
 
-        // write and wait for operation to complete
+        // write and wait for write operation to complete
         outStream.close();
         std::this_thread::sleep_for(std::chrono::seconds(6));
         return true;
@@ -54,7 +59,7 @@ bool parameters::read(const std::string& name, cv::Mat& cameraMatrix,
                 double read = 0.0f;
                 inStream >> read;
                 cameraMatrix.at<double>(r, c) = read;
-                std::cout << cameraMatrix.at<double>(r, c) << "\n";
+                // std::cout << cameraMatrix.at<double>(r, c) << "\n";
             }
         }
 
@@ -66,7 +71,7 @@ bool parameters::read(const std::string& name, cv::Mat& cameraMatrix,
                 double read = 0.0f;
                 inStream >> read;
                 distanceCoefficients.at<double>(r, c) = read;
-                std::cout << cameraMatrix.at<double>(r, c) << "\n";
+                // std::cout << cameraMatrix.at<double>(r, c) << "\n";
             }
         }
         inStream.close();
