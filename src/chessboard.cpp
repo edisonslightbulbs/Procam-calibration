@@ -38,13 +38,30 @@ cv::Mat chessboard::create(const cv::Size& imgSize, const cv::Size& boardSize,
     return board;
 }
 
-void chessboard::findWorldSpaceCorners(const cv::Size& boardSize,
-    float blockWidth, std::vector<cv::Point3f>& worldSpaceCorners)
+void chessboard::capture(
+    const bool& pass, cv::Mat& src, std::vector<cv::Mat>& chessboardImages)
 {
-    for (int i = 0; i < boardSize.height; i++) {
-        for (int j = 0; j < boardSize.width; j++) {
-            worldSpaceCorners.emplace_back(cv::Point3f(
-                (float)j * blockWidth, (float)i * blockWidth, 0.0f));
-        }
+    if (pass) {
+        cv::Mat dst;
+        src.copyTo(dst);
+        chessboardImages.emplace_back(dst);
+        int imgCount = (int)chessboardImages.size();
+        std::cout << "-- # images: " << imgCount << std::endl;
     }
+}
+
+bool chessboard::overlay(const cv::Mat& src, cv::Mat dst,
+    const cv::Size& dChessboard, const std::string& window)
+{
+    std::vector<cv::Point2f> chessboardCorners;
+    bool found = cv::findChessboardCorners(src, dChessboard, chessboardCorners,
+        cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_NORMALIZE_IMAGE);
+    if (found) {
+        src.copyTo(dst);
+        cv::drawChessboardCorners(dst, dChessboard, chessboardCorners, found);
+        cv::imshow(window, dst);
+    } else {
+        cv::imshow(window, src);
+    }
+    return found;
 }
