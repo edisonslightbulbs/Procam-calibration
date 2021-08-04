@@ -4,6 +4,7 @@ cv::Mat chessboard::create(const cv::Size& imgSize, const cv::Size& boardSize,
     std::vector<cv::Point2f>& imgSpaceCorners)
 {
     // todo: assert aspect ration of image size
+    //       using an invalid aspect ration causes and exception
 
     int offset = 50;
     unsigned char color = 255;
