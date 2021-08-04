@@ -8,7 +8,7 @@ namespace chessboard {
 const float R_BLOCK_WIDTH = 0.02500f;
 const float P_BLOCK_WIDTH = 0.06050f;
 
-void findImageSpaceCorners(std::vector<cv::Mat>& images,
+void findCameraSpaceCorners(std::vector<cv::Mat>& images,
     std::vector<std::vector<cv::Point2f>>& corners, bool show = false);
 
 void findWorldSpaceCorners(const cv::Size& boardSize, float blockWidth,
