@@ -1,8 +1,11 @@
+#include <chrono>
 #include <fstream>
-#include "parameters.h"
+#include <thread>
+
+#include "file.h"
 
 bool parameters::write(
-        const std::string& name, cv::Mat cameraMatrix, cv::Mat distanceCoefficients)
+    const std::string& name, cv::Mat cameraMatrix, cv::Mat distanceCoefficients)
 {
     std::ofstream outStream(name);
     if (outStream) {
@@ -27,14 +30,17 @@ bool parameters::write(
                 outStream << value << std::endl;
             }
         }
+
+        // write and wait for operation to complete
         outStream.close();
+        std::this_thread::sleep_for(std::chrono::seconds(6));
         return true;
     }
     return false;
 }
 
 bool parameters::read(const std::string& name, cv::Mat& cameraMatrix,
-                      cv::Mat& distanceCoefficients)
+    cv::Mat& distanceCoefficients)
 {
     std::ifstream inStream(name);
     if (inStream) {
