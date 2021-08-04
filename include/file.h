@@ -6,7 +6,7 @@
 
 namespace parameters {
 bool write(const std::string& name, cv::Mat cameraMatrix,
-    cv::Mat distanceCoefficients);
+    cv::Mat distortionCoefficients);
 
 bool read(const std::string& name, cv::Mat& cameraMatrix,
     cv::Mat& distanceCoefficients);
