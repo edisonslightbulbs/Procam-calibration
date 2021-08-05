@@ -38,15 +38,28 @@ cv::Mat chessboard::create(const cv::Size& imgSize, const cv::Size& boardSize,
     return board;
 }
 
+// now I want to capture t_data data
+void chessboard::capture(
+    const bool& pass, t_RGBD& data, std::vector<t_RGBD>& dataCollection)
+{
+    if (pass) {
+        dataCollection.emplace_back(data);
+        int imgCount = (int)dataCollection.size();
+        std::cout << "-- # of RGBD images: " << imgCount << std::endl;
+    }
+}
+
 void chessboard::capture(
     const bool& pass, cv::Mat& src, std::vector<cv::Mat>& chessboardImages)
 {
     if (pass) {
+        // todo: does the cloning here serve a purpose?
+        //   or is it mere redundant?
         cv::Mat dst;
         src.copyTo(dst);
         chessboardImages.emplace_back(dst);
         int imgCount = (int)chessboardImages.size();
-        std::cout << "-- # images: " << imgCount << std::endl;
+        std::cout << "-- # of RGB images: " << imgCount << std::endl;
     }
 }
 
