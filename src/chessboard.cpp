@@ -38,7 +38,22 @@ cv::Mat chessboard::create(const cv::Size& imgSize, const cv::Size& boardSize,
     return board;
 }
 
-// now I want to capture t_data data
+void chessboard::project(const cv::Size& dChessboard)
+{
+    const std::string CHESSBOARD_WINDOW = "VIRTUAL CHESSBOARD";
+    cv::namedWindow(CHESSBOARD_WINDOW, cv::WINDOW_NORMAL);
+    cv::setWindowProperty(
+        CHESSBOARD_WINDOW, cv::WND_PROP_FULLSCREEN, cv::WINDOW_FULLSCREEN);
+
+    std::vector<cv::Point2f> imageSpaceCorners;
+    cv::Size imgSize = cv::Size(1080, 720);
+    cv::Mat chessboard
+        = chessboard::create(imgSize, dChessboard, imageSpaceCorners);
+
+    cv::imshow(CHESSBOARD_WINDOW, chessboard);
+    cv::moveWindow(CHESSBOARD_WINDOW, 3000, 0);
+}
+
 void chessboard::capture(
     const bool& pass, t_RGBD& data, std::vector<t_RGBD>& dataCollection)
 {
