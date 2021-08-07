@@ -2,9 +2,11 @@
 #define CHESSBOARD_H
 
 #include "pcloud.h"
+#include "point.h"
+
 #include <opencv2/opencv.hpp>
 
-using t_RGBD = std::pair<cv::Mat, std::vector<t_rgbd>>;
+using t_RGBD = std::pair<cv::Mat, std::vector<Point>>;
 
 namespace chessboard {
 
@@ -20,8 +22,8 @@ void capture(
 bool overlay(const cv::Mat& src, cv::Mat dst, const cv::Size& dChessboard,
     const std::string& window);
 
-void capture(const bool& pass, std::pair<cv::Mat, std::vector<t_rgbd>>& data,
-    std::vector<t_RGBD>& dataCollection);
+void capture(
+    const bool& pass, t_RGBD& data, std::vector<t_RGBD>& dataCollection);
 
 void project(const cv::Size& dChessboard);
 }
