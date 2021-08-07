@@ -1,13 +1,24 @@
 #include "chessboard.h"
 
+void chessboard::checkAspectRatio(const int& width, const int& height)
+{
+    std::setprecision(4);
+    double ratio = (double)width / height;
+    double expected = (double)16 / 9;
+
+    if (ratio != expected) {
+        std::cerr << "-- please set chessboard image to a 16:9 aspect ratio";
+        exit(1);
+    }
+}
+
 cv::Mat chessboard::create(const cv::Size& imgSize, const cv::Size& boardSize,
     std::vector<cv::Point2f>& imgSpaceCorners)
 {
-    // todo: assert aspect ration of image size
-    //       using an invalid aspect ration causes and exception
-
     int offset = 50;
     unsigned char color = 255;
+    // checkAspectRatio(imgSize.width, imgSize.height); // todo: test function
+
     cv::Mat board(imgSize, CV_8UC3, cv::Scalar::all(255));
     int blockWidth
         = floor((imgSize.height - 2 * offset) / (boardSize.height + 1));
@@ -15,6 +26,7 @@ cv::Mat chessboard::create(const cv::Size& imgSize, const cv::Size& boardSize,
 
     std::cout << "--      image height: " << imgSize.height << std::endl;
     std::cout << "--      image  width: " << imgSize.width << std::endl;
+    std::cout << "--     aspect ration: 16:9 " << std::endl;
     std::cout << "-- chessboard height: " << boardSize.height << std::endl;
     std::cout << "--  chessboard width: " << boardSize.width << std::endl;
 
@@ -55,24 +67,20 @@ void chessboard::project(const cv::Size& dChessboard)
 }
 
 void chessboard::capture(
-    const bool& pass, t_RGBD& data, std::vector<t_RGBD>& dataCollection)
+    const bool& pass, t_pCloud& data, std::vector<t_pCloud>& pCloud)
 {
     if (pass) {
-        dataCollection.emplace_back(data);
-        int imgCount = (int)dataCollection.size();
+        pCloud.emplace_back(data);
+        int imgCount = (int)pCloud.size();
         std::cout << "-- # of RGBD images: " << imgCount << std::endl;
     }
 }
 
 void chessboard::capture(
-    const bool& pass, cv::Mat& src, std::vector<cv::Mat>& chessboardImages)
+    const bool& pass, cv::Mat& image, std::vector<cv::Mat>& chessboardImages)
 {
     if (pass) {
-        // todo: does the cloning here serve a purpose?
-        //   or is it mere redundant?
-        cv::Mat dst;
-        src.copyTo(dst);
-        chessboardImages.emplace_back(dst);
+        chessboardImages.emplace_back(image);
         int imgCount = (int)chessboardImages.size();
         std::cout << "-- # of RGB images: " << imgCount << std::endl;
     }
