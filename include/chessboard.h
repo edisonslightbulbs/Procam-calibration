@@ -6,11 +6,11 @@
 
 #include <opencv2/opencv.hpp>
 
-using t_pCloud = std::pair<cv::Mat, std::vector<Point>>;
+using t_pCloudFrame = std::pair<cv::Mat, std::vector<Point>>;
 
 namespace chessboard {
 
-const float R_BLOCK_WIDTH = 0.02500f;
+const float R_BLOCK_WIDTH = 0.02600f;
 const float P_BLOCK_WIDTH = 0.06050f;
 
 cv::Mat create(const cv::Size& imgSize, const cv::Size& boardSize,
@@ -22,7 +22,8 @@ void capture(
 bool overlay(const cv::Mat& src, cv::Mat dst, const cv::Size& dChessboard,
     const std::string& window);
 
-void capture(const bool& pass, t_pCloud& data, std::vector<t_pCloud>& pCloud);
+void capture(
+    const bool& pass, t_pCloudFrame& data, std::vector<t_pCloudFrame>& pCloud);
 
 void project(const cv::Size& dChessboard);
 
