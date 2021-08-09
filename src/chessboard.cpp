@@ -67,7 +67,7 @@ void chessboard::project(const cv::Size& dChessboard)
 }
 
 void chessboard::capture(
-    const bool& pass, t_pCloud& data, std::vector<t_pCloud>& pCloud)
+    const bool& pass, t_pCloudFrame& data, std::vector<t_pCloudFrame>& pCloud)
 {
     if (pass) {
         pCloud.emplace_back(data);
